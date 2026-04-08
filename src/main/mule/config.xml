@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway"
+	xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties"
+	xmlns:twilio="http://www.mulesoft.org/schema/mule/twilio"
+	xmlns:email="http://www.mulesoft.org/schema/mule/email" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:smtp="http://www.mulesoft.org/schema/mule/smtp"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/email/current/mule-email.xsd 
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd 
+http://www.mulesoft.org/schema/mule/smtp http://www.mulesoft.org/schema/mule/smtp/current/mule-smtp.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/twilio http://www.mulesoft.org/schema/mule/twilio/current/mule-twilio.xsd
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd
+http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="d3efb874-c86a-45b5-b396-3549e3c3fa8a" >
+		<http:listener-connection host="${http.internal.host}" port="${http.internal.port}" />
+	</http:listener-config>
+	<email:smtp-config name="Email_SMTP" doc:name="Email SMTP" doc:id="7749e557-35ef-4fd9-ae21-dee0f2bc53f0" >
+		<email:smtp-connection host="${smtp.host}" user="${secure::smtp.user}" password="${secure::smtp.password}" port="${smtp.port}">
+			<email:properties >
+				<email:property key="mail.smtp.starttls.required" value="true" />
+			</email:properties>
+		</email:smtp-connection>
+	</email:smtp-config>
+	<secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="47270718-67ef-46f5-9fbf-53b7adea3c3c" file="config/secureAlertingSystem.properties" key="${vault.key}" />
+	<configuration-properties doc:name="Configuration properties" doc:id="af484a72-5363-4217-9a51-4d155cd36ba7" file="config/alertingSystem.properties" />
+	<api-gateway:autodiscovery apiId="${api.id}" ignoreBasePath="true" doc:name="API Autodiscovery" doc:id="d80cb181-eed6-4247-8d8c-e878176362b7" flowRef="alertingsystemFlow" />
+	<twilio:config name="Twilio_Connector_Config" doc:name="Twilio Connector Config" doc:id="a6ed15e5-c61e-4e53-a784-94c7cead1a53" >
+		<twilio:account-sid-auth-token-connection username="${secure::twilio.user}" password="${secure::twilio.password}" protocol="HTTPS" baseUri="${twilio.baseURI}"/>
+	</twilio:config>
+</mule>

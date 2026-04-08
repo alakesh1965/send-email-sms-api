@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:twilio="http://www.mulesoft.org/schema/mule/twilio" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/twilio http://www.mulesoft.org/schema/mule/twilio/current/mule-twilio.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<flow name="sms-alerting-systemFlow" doc:id="70c150bc-b0f7-4628-bf95-f8c51c5e8967" >
+		<http:listener doc:name="Listener" doc:id="cd096024-492b-4ce8-b015-f693f492ba07" config-ref="HTTP_Listener_config" path="/sendSMSAlert"/>
+		<logger level="INFO" doc:name="Logger" doc:id="93958c3a-3328-4676-b416-aa89dc39735f" message="Sending SMS"/>
+		<ee:transform doc:name="SMS Body" doc:id="be22cf21-8da4-4d26-9a4b-a116fddc6933">
+			<ee:message>
+				<ee:set-payload resource="dwl/smsPayload.dwl" />
+			</ee:message>
+		</ee:transform>
+		<twilio:create20100401-accounts-messagesjson-by-account-sid doc:name="Send SMS" doc:id="d6a88c11-7f79-4cbc-9400-7acc97f91080" config-ref="Twilio_Connector_Config" accountSid="${secure::twilio.user}"/>
+		<logger level="INFO" doc:name="Log SMS Sent" doc:id="340f7b4a-9b9e-4c1b-bbb6-d5bf9a19cd2c" message="SMS sent successfully." />
+	</flow>
+</mule>
