@@ -17,5 +17,11 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 		</ee:transform>
 		<twilio:create20100401-accounts-messagesjson-by-account-sid doc:name="Send SMS" doc:id="d6a88c11-7f79-4cbc-9400-7acc97f91080" config-ref="Twilio_Connector_Config" accountSid="${secure::twilio.user}"/>
 		<logger level="INFO" doc:name="Log SMS Sent" doc:id="340f7b4a-9b9e-4c1b-bbb6-d5bf9a19cd2c" message="SMS sent successfully." />
+		<error-handler >
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="81ef837b-24b3-4225-b584-498431376af2" >
+				<set-payload value='#["Error Sending SMS to Reciepient. Please Investigate."]' doc:name="Set Payload" doc:id="09dbbf32-47a3-4313-9e5c-a468472a99e5" />
+				<logger level="INFO" doc:name="Logger" doc:id="ce697c86-4bc4-435f-a091-7f5f228fdde1" message="#[payload]" />
+			</on-error-propagate>
+		</error-handler>
 	</flow>
 </mule>
