@@ -9,7 +9,7 @@ http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/em
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
 http://www.mulesoft.org/schema/mule/twilio http://www.mulesoft.org/schema/mule/twilio/current/mule-twilio.xsd">
 	<flow name="alertingsystemFlow" doc:id="8789868a-1775-4d0a-833c-b25e453e8212" >
-		<http:listener doc:name="Listener" doc:id="f094ea0a-79a6-4d71-b6de-18d5dfb8d142" path="/sendEmaillAlert" config-ref="HTTP_Listener_config"/>
+		<http:listener doc:name="Listener" doc:id="f094ea0a-79a6-4d71-b6de-18d5dfb8d142" path="/sendEmailAlert" config-ref="HTTP_Listener_config"/>
 		<logger level="DEBUG" doc:name="Start Processing" message="Processing request..." />
 		<flow-ref doc:name="send-critical-alert-email-subflow" doc:id="63ebbb8c-cfaa-4c56-b3ab-93be0a40af3c" name="send-alert-email-subflow"/>
 		<error-handler>
@@ -22,7 +22,7 @@ http://www.mulesoft.org/schema/mule/twilio http://www.mulesoft.org/schema/mule/t
 	<sub-flow name="send-alert-email-subflow" doc:id="7a1f4b64-7385-4d5d-bbb9-0e338eb537b0" >
 		<logger level="INFO" doc:name="Log Alert Triggered" doc:id="750f94d8-6693-4caa-af5f-2137a8fbbf84" message="Email Alert triggered" />
 		<until-successful maxRetries="3" doc:name="Until Successful" doc:id="6a3162cc-8b61-4a42-bf75-fc5cd47cf7a5" >
-			<email:send doc:name="SMTP" doc:id="02fa1ada-40bb-49d8-993d-013489c74895" config-ref="Email_SMTP" fromAddress="${secure::smtp.user}" subject='#["Account Validation Failed"]'>
+			<email:send doc:name="SMTP" doc:id="02fa1ada-40bb-49d8-993d-013489c74895" config-ref="Email_SMTP" fromAddress="${secure::smtp.user}" subject='#[attributes.headers.subject]'>
 			<email:to-addresses>
 				<email:to-address value="${secure::smtp.to.user}" />
 			</email:to-addresses>
