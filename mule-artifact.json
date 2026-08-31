@@ -1,7 +1,5 @@
 {
-  "minMuleVersion": "4.9.0",
-  "javaSpecificationVersions": ["17"],
-  "secureProperties": [
-        "vault.key"
-    ]
+    "minMuleVersion": "4.9.0",
+    "javaSpecificationVersions": ["17"],
+    "secureProperties": ["vault.key"]
 }

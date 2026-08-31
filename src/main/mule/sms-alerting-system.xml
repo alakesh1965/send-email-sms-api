@@ -15,8 +15,11 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 				<ee:set-payload resource="dwl/smsPayload.dwl" />
 			</ee:message>
 		</ee:transform>
-		<twilio:create20100401-accounts-messagesjson-by-account-sid doc:name="Send SMS" doc:id="d6a88c11-7f79-4cbc-9400-7acc97f91080" config-ref="Twilio_Connector_Config" accountSid="${secure::twilio.user}"/>
+		<until-successful maxRetries="3" doc:name="Until Successful" doc:id="20dc5e33-d780-479b-9227-c1533d908664" >
+			<twilio:create20100401-accounts-messagesjson-by-account-sid doc:name="Send SMS" doc:id="d6a88c11-7f79-4cbc-9400-7acc97f91080" config-ref="Twilio_Connector_Config" accountSid="${secure::twilio.user}" />
+		</until-successful>
 		<logger level="INFO" doc:name="Log SMS Sent" doc:id="340f7b4a-9b9e-4c1b-bbb6-d5bf9a19cd2c" message="SMS sent successfully." />
+		<set-payload value='#["SMS Sent Successfully"]' doc:name="Set Payload" doc:id="df25b133-62c0-43df-962e-44ce5eddae1b" />
 		<error-handler >
 			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="81ef837b-24b3-4225-b584-498431376af2" >
 				<set-payload value='#["Error Sending SMS to Reciepient. Please Investigate."]' doc:name="Set Payload" doc:id="09dbbf32-47a3-4313-9e5c-a468472a99e5" />
